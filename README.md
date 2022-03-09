@@ -1,11 +1,11 @@
 # Getting Started with USYS
 
-This is the backend service of the USYS App. This App is a University Management System. This App includes management of Student Portal, Admission, Registrar, Accounting, Assesment, Cashier, Document Requests, Employee, Stocks.
+This is the backend service of USYS App. This App is all about University Management System. This App includes Student Portal, Admission, Registrar, Accounting, Assesment, Cashier, Document Requests, Employee and Stocks.
 
 ## Available Scripts
 
 We strictly use [Yarn](https://www.npmjs.com/package/yarn) for this project.
-If Yarn is not installed in your machine, simply run this command:
+If it is not installed in your machine, simply run this command:
 
 ### `npm i yarn -g`
 
