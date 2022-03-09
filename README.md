@@ -1,6 +1,6 @@
 # Getting Started with USYS
 
-This is the backend service of the App.
+This is the backend service of the USYS App. This App is a University Management System. This App includes management of Student Portal, Admission, Registrar, Accounting, Assesment, Cashier, Document Requests, Employee, Stocks.
 
 ## Available Scripts
 
