@@ -51,7 +51,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // REST API
-app.use("/", AuthRoute);
+app.use("/api/auth", AuthRoute);
 app.use("/api/campusCollege", CampusCollegeRoute);
 app.use("/api/college", CollegeRoute);
 app.use("/api/collegeCourses", CollegeCoursesRoute);
