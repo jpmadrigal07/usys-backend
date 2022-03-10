@@ -1,9 +1,17 @@
 # Changelog
 
+## 0.0.5
+
+- Added curriculum model
+- Added curriculum routes
+- Added rest api at server.js
+
 ## 0.0.4
-- Added subject model 
+
+- Added subject model
 - Added subject routes
 - Added rest api at server.js
+
 ## 0.0.3
 
 - Change pattern for error handling on studentLevel
