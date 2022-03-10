@@ -18,15 +18,10 @@ router.get("/", async (req, res) => {
     }
     try {
       const getAllCashier = await Cashier.find(condition);
-      res.json({
-        dbRes: getAllCashier,
-        isSuccess: true,
-      });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+      res.json(getAllCashier);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   });
 
@@ -84,30 +79,19 @@ router.post("/", async (req, res) => {
         });
         if (getCashier.length === 0) {
           const createCashier = await newCashier.save();
-          res.json({
-            dbRes: createCashier,
-            isSuccess: true,
-          });
+          res.json(createCashier);
         } else {
-          res.json({
-            dbRes: "Cashier is already in use",
-            isSuccess: false,
-          });
+          res.json(res.status(500).json("Cashier is already in use"));
         }
-      } catch (error) {
-        res.json({
-          dbRes: error.message,
-          isSuccess: false,
-        });
+      } catch ({ message: errMessage }) {
+        const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+        res.status(500).json(message);
       }
     } else {
-      res.json({
-        dbRes: "Required values are either invalid or empty",
-        isSuccess: false,
-      });
+      res.status(500).json("Required values are either invalid or empty");
     }
   });
-
+  
 // @route   PUT api/Cashier/:id
 // @desc    Update A Cashier
 // @access  Private
@@ -176,23 +160,15 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateCashier,
-          isSuccess: true,
-        });
-      } catch (error) {
-        res.json({
-          dbRes: error.message,
-          isSuccess: false,
-        });
-      }
-    } else {
-      res.json({
-        dbRes: "Cashier Cannot be found",
-        isSuccess: false,
-      });
+        res.json(updateCashier);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
-  });
+  } else {
+    res.status(500).json("Cashier cannot be found");
+  }
+});
 
 // @route   DELETE api/Cashier/:id
 // @desc    Delete A Cashier
@@ -211,22 +187,14 @@ router.delete("/:id", async (req, res) => {
             deletedAt: Date.now(),
           },
         });
-        res.json({
-          dbRes: deleteCashier,
-          isSuccess: true,
-        });
-      } else {
-        res.json({
-          dbRes: "Cashier is already deleted",
-          isSuccess: false,
-        });
-      }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+        res.json(deleteCashier);
+    } else {
+      res.status(500).json("Cashier is already deleted");
     }
-  });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
+  }
+});
   
   module.exports = router;

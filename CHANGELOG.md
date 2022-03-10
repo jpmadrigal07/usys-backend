@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.6
+- Fixed the error handling in campusCollege.js
+- Fixed the error handling in cashier.js
+- Fixed the error handling in college.js
+- Fixed the error handling in collegeCourses.js
+- Fixed the error handling in course.js
+- Fixed the error handling in document.js
+- Fixed the error handling in mainCampus.js
 ## 0.0.4
 - Added subject model 
 - Added subject routes

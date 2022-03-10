@@ -16,15 +16,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllCollege = await College.find(condition);
-    res.json({
-      dbRes: getAllCollege,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllCollege);
+   } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -71,27 +66,16 @@ router.post("/", async (req, res) => {
       });
       if (getCollege.length === 0) {
         const createCollege = await newCollege.save();
-        res.json({
-          dbRes: createCollege,
-          isSuccess: true
-        });
+        res.json(createCollege);
       } else {
-        res.json({
-          dbRes: "College name must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("College is already in use"));
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -152,21 +136,13 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateCollege,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        res.json(updateCollege);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "College Cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("College cannot be found");
   }
 });
 
@@ -187,21 +163,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteCollege,
-        isSuccess: true
-      });
+      res.json(deleteCollege);
     } else {
-      res.json({
-        dbRes: "College is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("College is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
