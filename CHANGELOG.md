@@ -1,5 +1,4 @@
 # Changelog
-
 ## 0.0.6
 - Fixed the error handling in campusCollege.js
 - Fixed the error handling in cashier.js
@@ -8,10 +7,18 @@
 - Fixed the error handling in course.js
 - Fixed the error handling in document.js
 - Fixed the error handling in mainCampus.js
+## 0.0.5
+
+- Added curriculum model
+- Added curriculum routes
+- Added rest api at server.js
+
 ## 0.0.4
-- Added subject model 
+
+- Added subject model
 - Added subject routes
 - Added rest api at server.js
+
 ## 0.0.3
 
 - Change pattern for error handling on studentLevel
