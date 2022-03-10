@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const collegeLevel = new Schema({
+const studentType = new Schema({
     type: String,
     createdAt: {
         type: Date,
@@ -11,4 +11,4 @@ const collegeLevel = new Schema({
     deletedAt: Date
 });
 
-module.exports = mongoose.model('CollegeLevel', collegeLevel);
+module.exports = mongoose.model('StudentType', studentType);

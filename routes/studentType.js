@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const ShsLevel = require("../models/shsLevel");
+const StudentType = require("../models/studentType");
 const isNil = require("lodash/isNil");
 const isEmpty = require("lodash/isEmpty");
 
-// @route   GET api/Shslevel
-// @desc    Get All ShsLevel
+// @route   GET api/studentType
+// @desc    Get All studentType
 // @access  Public
 router.get("/", async (req, res) => {
     const condition = !isNil(req.query.condition)
@@ -17,9 +17,9 @@ router.get("/", async (req, res) => {
       };
     }
     try {
-      const getAllShsLevel = await ShsLevel.find(condition);
+      const getAllStudentType = await StudentType.find(condition);
       res.json({
-        dbRes: getAllShsLevel,
+        dbRes: getAllStudentType,
         isSuccess: true,
       });
     } catch (error) {
@@ -30,32 +30,34 @@ router.get("/", async (req, res) => {
     }
   });
 
-// @route   POST api/shsLevel/add
-// @desc    Add A ShsLevel
+// @route   POST api/studentType/add
+// @desc    Add A studentType
 // @access  Private
 router.post("/", async (req, res) => {
     const type = req.body.type;
-    if (!isNil(type) ) { 
-      const newShsLevel = new ShsLevel({
-        type
-    
+    const level = req.body.level;
+    if (!isNil(type) && !isNil(level)) {
+      const newStudentType = new StudentType({
+        type,
+        level
       });
       try {
-        const getShsLevel = await ShsLevel.find({
+        const getStudentType = await StudentType.find({
             type,
+            level,
           deletedAt: {
             $exists: false,
           },
         });
-        if (getShsLevel.length === 0) {
-          const createShsLevel = await newShsLevel.save();
+        if (getStudentType.length === 0) {
+          const createStudentType = await newStudentType.save();
           res.json({
-            dbRes: createShsLevel,
+            dbRes: createStudentType,
             isSuccess: true,
           });
         } else {
           res.json({
-            dbRes: "Senior High Level is already in use",
+            dbRes: "Student Level is already in use",
             isSuccess: false,
           });
         }
@@ -73,19 +75,19 @@ router.post("/", async (req, res) => {
     }
   });
 
-// @route   PATCH api/ShsLevel/:id
-// @desc    Update A ShsLevel
+// @route   PATCH api/StudentType/:id
+// @desc    Update A StudentType
 // @access  Private
 router.patch("/:id", async (req, res) => {
     const condition = req.body;
     if (!isEmpty(condition)) {
       try {
-        const updateShsLevel = await ShsLevel.findByIdAndUpdate(req.params.id, {
+        const updateStudentType = await StudentType.findByIdAndUpdate(req.params.id, {
           $set: condition,
           updatedAt: Date.now(),
         });
         res.json({
-          dbRes: updateShsLevel,
+          dbRes: updateStudentType,
           isSuccess: true,
         });
       } catch (error) {
@@ -96,36 +98,36 @@ router.patch("/:id", async (req, res) => {
       }
     } else {
       res.json({
-        dbRes: "Senior High Level Cannot be found",
+        dbRes: "Student Level Cannot be found",
         isSuccess: false,
       });
     }
   });
 
-// @route   DELETE api/ShsLevel/:id
-// @desc    Delete A ShsLevel
+// @route   DELETE api/StudentType/:id
+// @desc    Delete A StudentType
 // @access  Private
 router.delete("/:id", async (req, res) => {
     try {
-      const getShsLevel = await ShsLevel.find({
+      const getStudentType = await StudentType.find({
         _id: req.params.id,
         deletedAt: {
           $exists: false,
         },
       });
-      if (getShsLevel.length > 0) {
-        const deleteShsLevel = await ShsLevel.findByIdAndUpdate(req.params.id, {
+      if (getStudentType.length > 0) {
+        const deleteStudentType = await StudentType.findByIdAndUpdate(req.params.id, {
           $set: {
             deletedAt: Date.now(),
           },
         });
         res.json({
-          dbRes: deleteShsLevel,
+          dbRes: deleteStudentType,
           isSuccess: true,
         });
       } else {
         res.json({
-          dbRes: "Senior High Level is already deleted",
+          dbRes: "Student Level is already deleted",
           isSuccess: false,
         });
       }

@@ -1,8 +1,11 @@
 # Changelog
 
+## 0.0.5
+- Added collegelevel and shslevel model routes
+- Added rest api at server.js
 ## 0.0.4
-
-- Added collegelevel and shslevel model & routes
+- Added subject model 
+- Added subject routes
 - Added rest api at server.js
 ## 0.0.3
 

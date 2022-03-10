@@ -11733,7 +11733,11 @@
     "@types/node" "*"
     "acorn" "^7.1.0"
 
+<<<<<<< HEAD
 "rsuite-table@^5.3.5":
+=======
+"rsuite-table@^5.3.6":
+>>>>>>> develop
   "integrity" "sha512-PNW0X62hDqxaV2MCLJvLs1nulHfHeTzGIC6B3RBS6GZM8jjc06z33CPBReX/T2wLNZ+d6znimLTZKujvfIZipw=="
   "resolved" "https://registry.npmjs.org/rsuite-table/-/rsuite-table-5.3.6.tgz"
   "version" "5.3.6"
@@ -11747,9 +11751,15 @@
     "react-is" "^17.0.2"
 
 "rsuite@^3.7.5 || >=4.0.0":
+<<<<<<< HEAD
   "integrity" "sha512-v5QL8a8h80tSNuMavoIbA5Jh/3E01MDSQCSlDh6Wi+fs58p6fLcCBK7M105+Kmzm5b6x+p6wpVYMq1/s2uFgYg=="
   "resolved" "https://registry.npmjs.org/rsuite/-/rsuite-5.6.3.tgz"
   "version" "5.6.3"
+=======
+  "integrity" "sha512-haFLU9p/3MdDF/IqFZPVflAVvzDg7K7jwmpKY+IgaAnpkLzYiGJ5R/t036ssFweqGKWxsOK/HXKW5VG9/Inr6w=="
+  "resolved" "https://registry.npmjs.org/rsuite/-/rsuite-5.6.4.tgz"
+  "version" "5.6.4"
+>>>>>>> develop
   dependencies:
     "@babel/runtime" "^7.8.4"
     "@juggle/resize-observer" "^3.3.1"
@@ -11764,7 +11774,11 @@
     "lodash" "^4.17.11"
     "prop-types" "^15.7.2"
     "react-virtualized" "^9.22.3"
+<<<<<<< HEAD
     "rsuite-table" "^5.3.5"
+=======
+    "rsuite-table" "^5.3.6"
+>>>>>>> develop
     "schema-typed" "^2.0.2"
 
 "rsvp@^4.8.4":
