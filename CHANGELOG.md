@@ -1,8 +1,15 @@
 # Changelog
 
+## 0.0.5
+
+- Added curriculum model
+- Added curriculum routes
+- Added rest api at server.js
+
 ## 0.0.4
 
-- Added model and route for Curriculum
+- Added subject model
+- Added subject routes
 - Added rest api at server.js
 
 ## 0.0.3

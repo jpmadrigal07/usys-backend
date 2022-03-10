@@ -101,7 +101,7 @@ router.delete("/:id", async (req, res) => {
           },
         }
       );
-      res.json(deleteStudentLevel);
+      res.json(deleteCurriculum);
     } else {
       res.status(500).json("Curriculum is already deleted");
     }
