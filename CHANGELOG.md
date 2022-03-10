@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+- Added collegelevel and shslevel model & routes
+- Added rest api at server.js
 ## 0.0.3
 
 - Change pattern for error handling on studentLevel
