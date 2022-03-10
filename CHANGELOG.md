@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.3
+
+- Change pattern for error handling on studentLevel
+- Added husky pre commit
+
 ## 0.0.2
 
 - Change auth route to /api/auth
