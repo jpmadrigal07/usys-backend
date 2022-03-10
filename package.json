@@ -1,12 +1,13 @@
 {
   "name": "usys-backend",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This is the backend service of the USYS App",
   "main": "server.js",
   "scripts": {
     "start": "set REACT_APP_STAGE=local && nodemon server.js",
     "start-dev": "set REACT_APP_STAGE=development && nodemon server.js",
-    "start-prod": "set REACT_APP_STAGE=production && nodemon server.js"
+    "start-prod": "set REACT_APP_STAGE=production && nodemon server.js",
+    "prepare": "husky install"
   },
   "author": "John Patrick M. Madrigal",
   "license": "ISC",
@@ -51,6 +52,8 @@
     "@types/js-cookie": "^2.2.6",
     "@types/react-router-dom": "^5.1.7",
     "eslint": "7.11.0",
-    "prettier": "^2.2.1"
+    "husky": "^7.0.0",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.3"
   }
 }
