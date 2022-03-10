@@ -21,6 +21,8 @@ const UserPrivilegesRoute = require("./routes/userPrivileges")
 const SemesterRoute = require("./routes/semester")
 const CashierRoute = require("./routes/cashier")
 const StudentLevelRoute = require("./routes/studentLevel")
+const CollegeLevelRoute = require("./routes/collegeLevel")
+const ShsLevelRoute = require("./routes/shsLevel")
 require("./services/passport");
 const { graphqlHTTP } = require('express-graphql')
 const app = express();
@@ -68,6 +70,10 @@ app.use("/api/userPrivileges",UserPrivilegesRoute);
 app.use("/api/semester",SemesterRoute);
 app.use("/api/cashier",CashierRoute);
 app.use("/api/studentLevel",StudentLevelRoute);
+app.use("/api/collegeLevel",CollegeLevelRoute);
+app.use("/api/shsLevel",ShsLevelRoute);
+
+
 
 // GRAPHQL
 app.use("/lspu", (req, res) => {
