@@ -16,17 +16,13 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllCollegeCourses = await CollegeCourses.find(condition);
-    res.json({
-      dbRes: getAllCollegeCourses,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllCollegeCourses);
+   } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
+
 
 // @route   GET api/CollegeCourses/:id
 // @desc    Get Single CollegeCourses
@@ -70,32 +66,19 @@ router.post("/", async (req, res) => {
           $exists: false
         }
       });
-      if (getCollegeCourses.length == 0) {
-        const newCollegeCourses = new CollegeCourses(collegeCourses);
+      if (getCollegeCourses.length === 0) {
         const createCollegeCourses = await newCollegeCourses.save();
-        res.json({
-          dbRes: createCollegeCourses,
-          isSuccess: true
-        });
+        res.json(createCollegeCourses);
       } else {
-        res.json({
-          dbRes: "Course id must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("College Courses is already in use"));
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
-  
 });
 
 // @route   PUT api/CollegeCourses/:id
@@ -159,21 +142,13 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateCollegeCourses,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        res.json(updateCollegeCourses);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "College Course Cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("College Courses cannot be found");
   }
 });
 
@@ -194,21 +169,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteCollegeCourses,
-        isSuccess: true
-      });
+      res.json(deleteCollegeCourses);
     } else {
-      res.json({
-        dbRes: "College Course is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("College Courses is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
