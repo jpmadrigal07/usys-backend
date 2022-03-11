@@ -1,10 +1,15 @@
 # Changelog
 
-## 0.0.7
+## 0.0.8
 
 - Added subjectPrerequisite model
 - Added subjectsPrerequisite routes
 - Added rest api endpoint at server.js
+
+## 0.0.7
+
+- Added package-lock.json to gitignore
+- Delete package-lock.json
 
 ## 0.0.6
 
