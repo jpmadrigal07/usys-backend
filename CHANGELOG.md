@@ -1,5 +1,12 @@
 # Changelog
+
+## 0.0.7
+
+- Added package-lock.json to gitignore
+- Delete package-lock.json
+
 ## 0.0.6
+
 - Fixed the error handling in campusCollege.js
 - Fixed the error handling in cashier.js
 - Fixed the error handling in college.js
@@ -7,6 +14,7 @@
 - Fixed the error handling in course.js
 - Fixed the error handling in document.js
 - Fixed the error handling in mainCampus.js
+
 ## 0.0.5
 
 - Added curriculum model
