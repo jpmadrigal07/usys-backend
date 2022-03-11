@@ -1,10 +1,18 @@
 # Changelog
 
-## 0.0.8
+## 0.0.9
 
 - Added subjectPrerequisite model
 - Added subjectsPrerequisite routes
 - Added rest api endpoint at server.js
+
+## 0.0.8
+
+- Added curriculumSemesters model
+- Added curriculumSemesters routes
+- Added rest api at server.js
+- Fixed spelling error in curriculum.js UNKNOW_ERROR_OCCURED to UNKNOWN_ERROR_OCCURED
+- Fixed spelling error in studentLevel.js UNKNOW_ERROR_OCCURED to UNKNOWN_ERROR_OCCURED
 
 ## 0.0.7
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const StudentLevel = require("../models/studentLevel");
 const isNil = require("lodash/isNil");
 const isEmpty = require("lodash/isEmpty");
-const { UNKNOW_ERROR_OCCURED } = require("../constants");
+const { UNKNOWN_ERROR_OCCURED } = require("../constants");
 
 // @route   GET api/studentLevel
 // @desc    Get All studentLevel
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
     const getAllStudentLevel = await StudentLevel.find(condition);
     res.json(getAllStudentLevel);
   } catch ({ message: errMessage }) {
-    const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
     res.status(500).json(message);
   }
 });
@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
         res.status(500).json("Student Level is already in use");
       }
     } catch ({ message: errMessage }) {
-      const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
       res.status(500).json(message);
     }
   } else {
@@ -79,7 +79,7 @@ router.patch("/:id", async (req, res) => {
         isSuccess: true,
       });
     } catch ({ message: errMessage }) {
-      const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
       res.status(500).json(message);
     }
   } else {
@@ -112,7 +112,7 @@ router.delete("/:id", async (req, res) => {
       res.status(500).json("Student Level is already deleted");
     }
   } catch ({ message: errMessage }) {
-    const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
     res.status(500).json(message);
   }
 });
