@@ -18,15 +18,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllSubjectPrerequisite = await SubjectPrerequisite.find(condition);
-    res.json({
-      dbRes: getAllSubjectPrerequisite,
-      isSuccess: true,
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false,
-    });
+    res.json(getAllSubjectPrerequisite);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -49,29 +44,18 @@ router.post("/", async (req, res) => {
           $exists: false,
         },
       });
-      if (getSubjectPrerequisite.length === 0) {
+      if (getSubjectPrerequisite.length == 0) {
         const createSubjectPrerequisite = await newSubjectPrerequisite.save();
-        res.json({
-          dbRes: createSubjectPrerequisite,
-          isSuccess: true,
-        });
+        res.json(createSubjectPrerequisite);
       } else {
-        res.json({
-          dbRes: "Subject is already in use",
-          isSuccess: false,
-        });
+        res.status(500).json("SubjectPrerequisite is already in use");
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false,
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -87,21 +71,13 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-      res.json({
-        dbRes: updateSubjectPrerequisite,
-        isSuccess: true,
-      });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+      res.json(updateSubjectPrerequisite);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "SubjectPrerequisite Cannot be found",
-      isSuccess: false,
-    });
+    res.status(500).json("SubjectPrerequisite Cannot be found");
   }
 });
 
@@ -123,21 +99,13 @@ router.delete("/:id", async (req, res) => {
             deletedAt: Date.now(),
           },
         });
-      res.json({
-        dbRes: deleteSubjectPrerequisite,
-        isSuccess: true,
-      });
+      res.json(deleteSubjectPrerequisite);
     } else {
-      res.json({
-        dbRes: "SubjectPrerequisite is already deleted",
-        isSuccess: false,
-      });
+      res.json("SubjectPrerequisite is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false,
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
