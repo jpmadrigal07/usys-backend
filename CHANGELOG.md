@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.6
+
+- Added subjectPrerequisite model
+- Added subjectsPrerequisite routes
+- Added rest api endpoint at server.js
+
 ## 0.0.5
 
 - Added curriculum model
