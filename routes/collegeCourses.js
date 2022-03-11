@@ -8,23 +8,20 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All CollegeCourses
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllCollegeCourses = await CollegeCourses.find(condition);
-    res.json({
-      dbRes: getAllCollegeCourses,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllCollegeCourses);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -36,17 +33,17 @@ router.get("/:id", async (req, res) => {
     const getCollegeCourses = await CollegeCourses.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getCollegeCourses,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -59,7 +56,7 @@ router.post("/", async (req, res) => {
   const courseId = req.body.courseId;
   const collegeCourses = {
     collegeId,
-    courseId
+    courseId,
   };
   if (!isNil(collegeId) && !isNil(courseId)) {
     try {
@@ -67,35 +64,22 @@ router.post("/", async (req, res) => {
         collegeId,
         courseId,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
-      if (getCollegeCourses.length == 0) {
-        const newCollegeCourses = new CollegeCourses(collegeCourses);
+      if (getCollegeCourses.length === 0) {
         const createCollegeCourses = await newCollegeCourses.save();
-        res.json({
-          dbRes: createCollegeCourses,
-          isSuccess: true
-        });
+        res.json(createCollegeCourses);
       } else {
-        res.json({
-          dbRes: "Course id must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("College Courses is already in use"));
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
-  
 });
 
 // @route   PUT api/CollegeCourses/:id
@@ -106,44 +90,47 @@ router.put("/:id", async (req, res) => {
   const courseId = req.body.courseId;
   const collegeCourses = {
     collegeId,
-    courseId
+    courseId,
   };
   if (!isNil(collegeId) && !isNil(courseId)) {
     try {
       const getCollegeCourses = await CollegeCourses.find({
         collegeId,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getCollegeCourses.length === 0) {
-        const updateCollegeCourses = await CollegeCourses.findByIdAndUpdate(req.params.id, {
-          $set: {
-            collegeId,
-            courseId,
-            updatedAt: Date.now(),
-          },
-        });
+        const updateCollegeCourses = await CollegeCourses.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: {
+              collegeId,
+              courseId,
+              updatedAt: Date.now(),
+            },
+          }
+        );
         res.json({
           dbRes: updateCollegeCourses,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "College id and course id must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -155,25 +142,20 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateCollegeCourses = await CollegeCourses.findByIdAndUpdate(req.params.id, {
+      const updateCollegeCourses = await CollegeCourses.findByIdAndUpdate(
+        req.params.id,
+        {
           $set: condition,
           updatedAt: Date.now(),
-        });
-        res.json({
-          dbRes: updateCollegeCourses,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        }
+      );
+      res.json(updateCollegeCourses);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "College Course Cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("College Courses cannot be found");
   }
 });
 
@@ -185,30 +167,25 @@ router.delete("/:id", async (req, res) => {
     const getCollegeCourses = await CollegeCourses.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getCollegeCourses.length > 0) {
-      const deleteCollegeCourses = await CollegeCourses.findByIdAndUpdate(req.params.id, {
-        $set: {
-          deletedAt: Date.now(),
-        },
-      });
-      res.json({
-        dbRes: deleteCollegeCourses,
-        isSuccess: true
-      });
+      const deleteCollegeCourses = await CollegeCourses.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            deletedAt: Date.now(),
+          },
+        }
+      );
+      res.json(deleteCollegeCourses);
     } else {
-      res.json({
-        dbRes: "College Course is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("College Courses is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

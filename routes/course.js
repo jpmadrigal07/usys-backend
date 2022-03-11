@@ -8,23 +8,20 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All Course
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllCourse = await Course.find(condition);
-    res.json({
-      dbRes: getAllCourse,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllCourse);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -36,17 +33,17 @@ router.get("/:id", async (req, res) => {
     const getCourse = await Course.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getCourse,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -60,38 +57,27 @@ router.post("/", async (req, res) => {
   if (!isNil(courseName) && !isNil(courseCode)) {
     const newCourse = new Course({
       courseName,
-      courseCode
+      courseCode,
     });
     try {
       const getCourse = await Course.find({
         courseName,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getCourse.length === 0) {
         const createCourse = await newCourse.save();
-        res.json({
-          dbRes: createCourse,
-          isSuccess: true
-        });
+        res.json(createCourse);
       } else {
-        res.json({
-          dbRes: "Course name must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("Course is already in use"));
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -99,15 +85,15 @@ router.post("/", async (req, res) => {
 // @desc    Update A Course
 // @access  Private
 router.put("/:id", async (req, res) => {
-    const courseName = req.body.courseName;
-    const courseCode = req.body.courseCode;
+  const courseName = req.body.courseName;
+  const courseCode = req.body.courseCode;
   if (!isNil(courseName) && !isNil(courseCode)) {
     try {
       const getCourse = await Course.find({
         courseName,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getCourse.length === 0) {
         const updateCourse = await Course.findByIdAndUpdate(req.params.id, {
@@ -116,29 +102,29 @@ router.put("/:id", async (req, res) => {
             courseCode,
             createdAt,
             updatedAt: Date.now(),
-            deletedAt
+            deletedAt,
           },
         });
         res.json({
           dbRes: updateCourse,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "Course name must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -150,25 +136,17 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateCourse = await Course.findByIdAndUpdate(req.params.id, {
-          $set: condition,
-          updatedAt: Date.now(),
-        });
-        res.json({
-          dbRes: updateCourse,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
+      const updateCourse = await Course.findByIdAndUpdate(req.params.id, {
+        $set: condition,
+        updatedAt: Date.now(),
       });
+      res.json(updateCourse);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Course Cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("Course cannot be found");
   }
 });
 
@@ -180,8 +158,8 @@ router.delete("/:id", async (req, res) => {
     const getCourse = await Course.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getCourse.length > 0) {
       const deleteCourse = await Course.findByIdAndUpdate(req.params.id, {
@@ -189,21 +167,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteCourse,
-        isSuccess: true
-      });
+      res.json(deleteCourse);
     } else {
-      res.json({
-        dbRes: "Course is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("Course is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
