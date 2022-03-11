@@ -16,15 +16,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllMainCampus = await MainCampus.find(condition);
-    res.json({
-      dbRes: getAllMainCampus,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllMainCampus);
+   } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -85,27 +80,16 @@ router.post("/", async (req, res) => {
       });
       if (getMainCampus.length === 0) {
         const createMainCampus = await newMainCampus.save();
-        res.json({
-          dbRes: createMainCampus,
-          isSuccess: true
-        });
+        res.json(createMainCampus);
       } else {
-        res.json({
-          dbRes: "Campus name must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("Main Campus is already in use"));
       }
-    } catch (console) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -182,21 +166,13 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateMainCampus,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        res.json(updateMainCampus);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Course Cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("Main Campus cannot be found");
   }
 });
 
@@ -217,21 +193,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteMainCampus,
-        isSuccess: true
-      });
+      res.json(deleteMainCampus);
     } else {
-      res.json({
-        dbRes: "Campus is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("Main Campus is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

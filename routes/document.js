@@ -16,15 +16,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllDocument = await Document.find(condition);
-    res.json({
-      dbRes: getAllDocument,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllDocument);
+   } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -83,27 +78,16 @@ router.post("/", async (req, res) => {
       });
       if (getDocument.length === 0) {
         const createDocument = await newDocument.save();
-        res.json({
-          dbRes: createDocument,
-          isSuccess: true
-        });
+        res.json(createDocument);
       } else {
-        res.json({
-          dbRes: "File name and course must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("Document is already in use"));
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -175,21 +159,13 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateDocument,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        res.json(updateDocument);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Document sannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("Document cannot be found");
   }
 });
 
@@ -210,21 +186,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteDocument,
-        isSuccess: true
-      });
+      res.json(deleteDocument);
     } else {
-      res.json({
-        dbRes: "Document is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("Document is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

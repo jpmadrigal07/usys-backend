@@ -1,6 +1,6 @@
 {
   "name": "usys-backend",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "This is the backend service of the USYS App",
   "main": "server.js",
   "scripts": {

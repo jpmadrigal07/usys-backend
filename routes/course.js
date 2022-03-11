@@ -16,15 +16,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllCourse = await Course.find(condition);
-    res.json({
-      dbRes: getAllCourse,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllCourse);
+   } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -71,27 +66,16 @@ router.post("/", async (req, res) => {
       });
       if (getCourse.length === 0) {
         const createCourse = await newCourse.save();
-        res.json({
-          dbRes: createCourse,
-          isSuccess: true
-        });
+        res.json(createCourse);
       } else {
-        res.json({
-          dbRes: "Course name must be unique",
-          isSuccess: false
-        });
+        res.json(res.status(500).json("Course is already in use"));
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -154,23 +138,16 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateCourse,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        res.json(updateCourse);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Course Cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("Course cannot be found");
   }
 });
+
 
 // @route   DELETE api/Course/:id
 // @desc    Delete A Course
@@ -189,21 +166,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteCourse,
-        isSuccess: true
-      });
+      res.json(deleteCourse);
     } else {
-      res.json({
-        dbRes: "Course is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("Course is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

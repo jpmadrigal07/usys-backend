@@ -16,15 +16,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllCampusCollege = await CampusCollege.find(condition);
-    res.json({
-      dbRes: getAllCampusCollege,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllCampusCollege);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOW_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -32,23 +27,23 @@ router.get("/", async (req, res) => {
 // @desc    Get Single CampusCollege
 // @access  Public
 router.get("/:id", async (req, res) => {
-  try {
-    const getCampusCollege = await CampusCollege.findById({
-      _id: req.params.id,
-      deletedAt: {
-        $exists: false
-      }
-    });
-    res.json({
-      dbRes: getCampusCollege,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
-  }
+try {
+  const getCampusCollege = await CampusCollege.findById({
+    _id: req.params.id,
+    deletedAt: {
+      $exists: false
+    }
+  });
+  res.json({
+    dbRes: getCampusCollege,
+    isSuccess: true
+  });
+} catch (error) {
+  res.json({
+    dbRes: error.message,
+    isSuccess: false
+  });
+}
 });
 
 // @route   POST api/CampusCollege/add
@@ -71,31 +66,18 @@ router.post("/", async (req, res) => {
         }
       });
       if (getCampusCollege.length == 0) {
-        const newCampusCollege = new CampusCollege(campusCollege);
         const createCampusCollege = await newCampusCollege.save();
-        res.json({
-          dbRes: createCampusCollege,
-          isSuccess: true
-        });
+        res.json(createCampusCollege);
       } else {
-        res.json({
-          dbRes: "College and campus id must be unique",
-          isSuccess: false
-        });
+        res.status(500).json("Campus College is already in use");
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
-  
 });
 
 // @route   PUT api/CampusCollege/:id
@@ -160,21 +142,13 @@ router.patch("/:id", async (req, res) => {
           $set: condition,
           updatedAt: Date.now(),
         });
-        res.json({
-          dbRes: updateCampusCollege,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+        res.json(updateCampusCollege);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "College cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("Campus College cannot be found");
   }
 });
 
@@ -195,21 +169,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteCampusCollege,
-        isSuccess: true
-      });
+      res.json(deleteCampusCollege);
     } else {
-      res.json({
-        dbRes: "College campus is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("Campus College is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMssage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
