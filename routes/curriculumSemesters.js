@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const Curriculum = require("../models/curriculum");
+const CurriculumSemesters = require("../models/curriculumSemesters");
 const isNil = require("lodash/isNil");
 const isEmpty = require("lodash/isEmpty");
 
-// @route   GET api/curriculum
-// @desc    Get All Curriculum
+// @route   GET api/curriculumSemesters
+// @desc    Get All CurriculumSemesters
 // @access  Public
 router.get("/", async (req, res) => {
   const condition = !isNil(req.query.condition)
@@ -17,36 +17,38 @@ router.get("/", async (req, res) => {
     };
   }
   try {
-    const getAllCurriculum = await Curriculum.find(condition);
-    res.json(getAllCurriculum);
+    const getAllCurriculumSemesters = await CurriculumSemesters.find(condition);
+    res.json(getAllCurriculumSemesters);
   } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
     res.status(500).json(message);
   }
 });
 
-// @route   POST api/curriculum
-// @desc    Add A Curriculum
+// @route   POST api/curriculumSemesters/add
+// @desc    Add A CurriculumSemesters
 // @access  Private
 router.post("/", async (req, res) => {
-  const courseId = req.body.courseId;
-  const curriculum = {
-    courseId,
-  };
-  if (!isNil(courseId)) {
+  const curriculumId = req.body.curriculumId;
+  const semestersId = req.body.semestersId;
+  if (!isNil(curriculumId) && !isNil(semestersId)) {
+    const newCurriculumSemesters = new CurriculumSemesters({
+      curriculumId,
+      semestersId,
+    });
     try {
-      const getCurriculum = await Curriculum.find({
-        courseId,
+      const getCurriculumSemesters = await CurriculumSemesters.find({
+        curriculumId,
+        semestersId,
         deletedAt: {
           $exists: false,
         },
       });
-      if (getCurriculum.length == 0) {
-        const newCurriculum = new Curriculum(curriculum);
-        const createCurriculum = await newCurriculum.save();
-        res.json(createCurriculum);
+      if (getCurriculumSemesters.length === 0) {
+        const createCurriculumSemesters = await newCurriculumSemesters.save();
+        res.json(createCurriculumSemesters);
       } else {
-        res.status(500).json("Curriculum is already in use");
+        res.status(500).json("Curriculum Semester is already in use");
       }
     } catch ({ message: errMessage }) {
       const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
@@ -57,53 +59,49 @@ router.post("/", async (req, res) => {
   }
 });
 
-// @route   PATCH api/curriculum/:id
-// @desc    Update A Curriculum
+// @route   PATCH api/curriculumSemesters/:id
+// @desc    Update A CurriculumSemesters
 // @access  Private
 router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-      const updateCurriculum = await Curriculum.findByIdAndUpdate(
-        req.params.id,
-        {
+      const updateCurriculumSemesters =
+        await CurriculumSemesters.findByIdAndUpdate(req.params.id, {
           $set: condition,
           updatedAt: Date.now(),
-        }
-      );
-      res.json(updateCurriculum);
+        });
+      res.json(updateCurriculumSemesters);
     } catch ({ message: errMessage }) {
       const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
       res.status(500).json(message);
     }
   } else {
-    res.status(500).json("Curriculum Cannot be found");
+    res.status(500).json("Curriculum Semesters Cannot be found");
   }
 });
 
-// @route   DELETE api/Curriculum/:id
-// @desc    Delete A Curriculum
+// @route   DELETE api/curriculumSemesters/:id
+// @desc    Delete A CurriculumSemesters
 // @access  Private
 router.delete("/:id", async (req, res) => {
   try {
-    const getCurriculum = await Curriculum.find({
+    const getCurriculumSemesters = await CurriculumSemesters.find({
       _id: req.params.id,
       deletedAt: {
         $exists: false,
       },
     });
-    if (getCurriculum.length > 0) {
-      const deleteCurriculum = await Curriculum.findByIdAndUpdate(
-        req.params.id,
-        {
+    if (getCurriculumSemesters.length > 0) {
+      const deleteCurriculumSemesters =
+        await CurriculumSemesters.findByIdAndUpdate(req.params.id, {
           $set: {
             deletedAt: Date.now(),
           },
-        }
-      );
-      res.json(deleteCurriculum);
+        });
+      res.json(deleteCurriculumSemesters);
     } else {
-      res.status(500).json("Curriculum is already deleted");
+      res.status(500).json("Curriculum Semesters is already deleted");
     }
   } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;

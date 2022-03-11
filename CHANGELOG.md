@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.8
+
+- Added curriculumSemesters model
+- Added curriculumSemesters routes
+- Added rest api at server.js
+- Fixed spelling error in curriculum.js UNKNOW_ERROR_OCCURED to UNKNOWN_ERROR_OCCURED
+- Fixed spelling error in studentLevel.js UNKNOW_ERROR_OCCURED to UNKNOWN_ERROR_OCCURED
+
 ## 0.0.7
 
 - Added package-lock.json to gitignore
