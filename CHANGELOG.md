@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.9
+
+- Added curriculumStudentType model
+- Added curriculumStudentTypes routes
+- Added rest api endpoint at server.js
+
 ## 0.0.7
 
 - Added package-lock.json to gitignore
