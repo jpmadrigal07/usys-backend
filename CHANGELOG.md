@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.11
+
+- changing of SubjectPrerequisite to CurriculumStudentType in models
+
 ## 0.0.10
 
 - Added subjectPrerequisite model
