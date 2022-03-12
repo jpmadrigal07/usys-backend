@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.12
+
+- removing graphql in the backend
+
 ## 0.0.11
 
 - changing of SubjectPrerequisite to CurriculumStudentType in models
