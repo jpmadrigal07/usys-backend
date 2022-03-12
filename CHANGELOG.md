@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.0.13
+- removing graphql in the backend
+
 ## 0.0.12
 
-- removing graphql in the backend
+- Added student type model
+- Added student type routes
+- Added rest api at server.
 
 ## 0.0.11
 
