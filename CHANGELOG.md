@@ -1,12 +1,58 @@
 # Changelog
 
-## 0.0.5
-- Added collegelevel and shslevel model routes
+## 0.0.11
+
+- Added student type model
+- Added student type routes
+- Added rest api at server.
+
+## 0.0.10
+
+- Added subjectPrerequisite model
+- Added subjectsPrerequisite routes
+- Added rest api endpoint at server.js
+
+## 0.0.9
+
+- Added curriculumStudentType model
+- Added curriculumStudentTypes routes
+- Added rest api endpoint at server.js
+
+## 0.0.8
+
+- Added curriculumSemesters model
+- Added curriculumSemesters routes
 - Added rest api at server.js
+- Fixed spelling error in curriculum.js UNKNOW_ERROR_OCCURED to UNKNOWN_ERROR_OCCURED
+- Fixed spelling error in studentLevel.js UNKNOW_ERROR_OCCURED to UNKNOWN_ERROR_OCCURED
+
+## 0.0.7
+
+- Added package-lock.json to gitignore
+- Delete package-lock.json
+
+## 0.0.6
+
+- Fixed the error handling in campusCollege.js
+- Fixed the error handling in cashier.js
+- Fixed the error handling in college.js
+- Fixed the error handling in collegeCourses.js
+- Fixed the error handling in course.js
+- Fixed the error handling in document.js
+- Fixed the error handling in mainCampus.js
+
+## 0.0.5
+
+- Added curriculum model
+- Added curriculum routes
+- Added rest api at server.js
+
 ## 0.0.4
-- Added subject model 
+
+- Added subject model
 - Added subject routes
 - Added rest api at server.js
+
 ## 0.0.3
 
 - Change pattern for error handling on studentLevel

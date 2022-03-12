@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const StudentLevel = require("../models/studentLevel");
+const Curriculum = require("../models/curriculum");
 const isNil = require("lodash/isNil");
 const isEmpty = require("lodash/isEmpty");
-const { UNKNOWN_ERROR_OCCURED } = require("../constants");
 
-// @route   GET api/studentLevel
-// @desc    Get All studentLevel
+// @route   GET api/curriculum
+// @desc    Get All Curriculum
 // @access  Public
 router.get("/", async (req, res) => {
   const condition = !isNil(req.query.condition)
@@ -18,38 +17,36 @@ router.get("/", async (req, res) => {
     };
   }
   try {
-    const getAllStudentLevel = await StudentLevel.find(condition);
-    res.json(getAllStudentLevel);
+    const getAllCurriculum = await Curriculum.find(condition);
+    res.json(getAllCurriculum);
   } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
     res.status(500).json(message);
   }
 });
 
-// @route   POST api/studentLevel/add
-// @desc    Add A studentLevel
+// @route   POST api/curriculum
+// @desc    Add A Curriculum
 // @access  Private
 router.post("/", async (req, res) => {
-  const type = req.body.type;
-  const level = req.body.level;
-  if (!isNil(type) && !isNil(level)) {
-    const newStudentLevel = new StudentLevel({
-      type,
-      level,
-    });
+  const courseId = req.body.courseId;
+  const curriculum = {
+    courseId,
+  };
+  if (!isNil(courseId)) {
     try {
-      const getStudentLevel = await StudentLevel.find({
-        type,
-        level,
+      const getCurriculum = await Curriculum.find({
+        courseId,
         deletedAt: {
           $exists: false,
         },
       });
-      if (getStudentLevel.length === 0) {
-        const createStudentLevel = await newStudentLevel.save();
-        res.json(createStudentLevel);
+      if (getCurriculum.length == 0) {
+        const newCurriculum = new Curriculum(curriculum);
+        const createCurriculum = await newCurriculum.save();
+        res.json(createCurriculum);
       } else {
-        res.status(500).json("Student Level is already in use");
+        res.status(500).json("Curriculum is already in use");
       }
     } catch ({ message: errMessage }) {
       const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
@@ -60,46 +57,43 @@ router.post("/", async (req, res) => {
   }
 });
 
-// @route   PATCH api/StudentLevel/:id
-// @desc    Update A StudentLevel
+// @route   PATCH api/curriculum/:id
+// @desc    Update A Curriculum
 // @access  Private
 router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-      const updateStudentLevel = await StudentLevel.findByIdAndUpdate(
+      const updateCurriculum = await Curriculum.findByIdAndUpdate(
         req.params.id,
         {
           $set: condition,
           updatedAt: Date.now(),
         }
       );
-      res.json({
-        dbRes: updateStudentLevel,
-        isSuccess: true,
-      });
+      res.json(updateCurriculum);
     } catch ({ message: errMessage }) {
       const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
       res.status(500).json(message);
     }
   } else {
-    res.status(500).json("Student Level Cannot be found");
+    res.status(500).json("Curriculum Cannot be found");
   }
 });
 
-// @route   DELETE api/StudentLevel/:id
-// @desc    Delete A StudentLevel
+// @route   DELETE api/Curriculum/:id
+// @desc    Delete A Curriculum
 // @access  Private
 router.delete("/:id", async (req, res) => {
   try {
-    const getStudentLevel = await StudentLevel.find({
+    const getCurriculum = await Curriculum.find({
       _id: req.params.id,
       deletedAt: {
         $exists: false,
       },
     });
-    if (getStudentLevel.length > 0) {
-      const deleteStudentLevel = await StudentLevel.findByIdAndUpdate(
+    if (getCurriculum.length > 0) {
+      const deleteCurriculum = await Curriculum.findByIdAndUpdate(
         req.params.id,
         {
           $set: {
@@ -107,9 +101,9 @@ router.delete("/:id", async (req, res) => {
           },
         }
       );
-      res.json(deleteStudentLevel);
+      res.json(deleteCurriculum);
     } else {
-      res.status(500).json("Student Level is already deleted");
+      res.status(500).json("Curriculum is already deleted");
     }
   } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
