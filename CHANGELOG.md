@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.12
+
+- Added student type model
+- Added student type routes
+- Added rest api at server.
+
 ## 0.0.11
 
 - changing of SubjectPrerequisite to CurriculumStudentType in models
