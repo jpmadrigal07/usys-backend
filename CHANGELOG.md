@@ -6,6 +6,9 @@
 - Added Curriculum Student Levels routes
 - Added Curriculum Student Levels at server.
 
+## 0.0.13
+- removing graphql in the backend
+
 ## 0.0.12
 
 - Added student type model

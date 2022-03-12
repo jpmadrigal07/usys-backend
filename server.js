@@ -29,9 +29,7 @@ const CurriculumStudentTypesRoute = require("./routes/curriculumStudentTypes");
 const SubjectsPrerequisite = require("./routes/subjectsPrerequisite");
 const CurriculumStudentLevelsRoute = require("./routes/curriculumStudentLevels");
 require("./services/passport");
-const { graphqlHTTP } = require("express-graphql");
 const app = express();
-const schema = require("./schema/schemas");
 
 // Connect to Mongo
 mongoose
@@ -83,19 +81,9 @@ app.use("/api/curriculumStudentTypes", CurriculumStudentTypesRoute);
 app.use("/api/subjectPrerequisite", SubjectsPrerequisite);
 app.use("/api/curriculumStudentLevels", CurriculumStudentLevelsRoute);
 
-// GRAPHQL
-app.use("/lspu", (req, res) => {
-  graphqlHTTP({
-    schema,
-    graphiql: { headerEditorEnabled: true },
-    context: { req },
-  })(req, res);
-});
-
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
-  console.log(`GraphQL: /lspu`);
   console.log(`REST API: /api/**`);
 });
