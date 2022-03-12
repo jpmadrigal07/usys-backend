@@ -8,16 +8,18 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All Document
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllDocument = await Document.find(condition);
     res.json(getAllDocument);
-   } catch ({ message: errMessage }) {
+  } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
     res.status(500).json(message);
   }
@@ -31,17 +33,17 @@ router.get("/:id", async (req, res) => {
     const getDocument = await Document.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getDocument,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -57,24 +59,24 @@ router.post("/", async (req, res) => {
   const applyToAdmitTypes = req.body.applyToAdmitTypes;
   const isEnrolleeRequiredToUpload = req.body.isEnrolleeRequiredToUpload;
   const isDocumentEnabled = req.body.isDocumentEnabled;
-  
+
   if (!isNil(fileName)) {
     const newDocument = new Document({
-    fileName,
-    isApplyToAllCourse,
-    applyToCourses,
-    isApplyToAllAdmitType,
-    applyToAdmitTypes,
-    isEnrolleeRequiredToUpload,
-    isDocumentEnabled
+      fileName,
+      isApplyToAllCourse,
+      applyToCourses,
+      isApplyToAllAdmitType,
+      applyToAdmitTypes,
+      isEnrolleeRequiredToUpload,
+      isDocumentEnabled,
     });
     try {
       const getDocument = await Document.find({
         fileName,
         applyToCourses,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getDocument.length === 0) {
         const createDocument = await newDocument.save();
@@ -102,14 +104,22 @@ router.put("/:id", async (req, res) => {
   const applyToAdmitTypes = req.body.applyToAdmitTypes;
   const isEnrolleeRequiredToUpload = req.body.isEnrolleeRequiredToUpload;
   const isDocumentEnabled = req.body.isDocumentEnabled;
-  if (!isNil(fileName) && !isNil(isApplyToAllCourse) && !isNil(applyToCourses) && !isNil(isApplyToAllAdmitType) && !isNil(applyToAdmitTypes) && !isNil(isEnrolleeRequiredToUpload) && !isNil(isDocumentEnabled)) {
+  if (
+    !isNil(fileName) &&
+    !isNil(isApplyToAllCourse) &&
+    !isNil(applyToCourses) &&
+    !isNil(isApplyToAllAdmitType) &&
+    !isNil(applyToAdmitTypes) &&
+    !isNil(isEnrolleeRequiredToUpload) &&
+    !isNil(isDocumentEnabled)
+  ) {
     try {
       const getDocument = await Document.find({
         fileName,
         applyToCourses,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getDocument.length === 0) {
         const updateDocument = await Document.findByIdAndUpdate(req.params.id, {
@@ -126,24 +136,24 @@ router.put("/:id", async (req, res) => {
         });
         res.json({
           dbRes: updateDocument,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "File name and course must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -155,13 +165,13 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateDocument = await Document.findByIdAndUpdate(req.params.id, {
-          $set: condition,
-          updatedAt: Date.now(),
-        });
-        res.json(updateDocument);
+      const updateDocument = await Document.findByIdAndUpdate(req.params.id, {
+        $set: condition,
+        updatedAt: Date.now(),
+      });
+      res.json(updateDocument);
     } catch ({ message: errMessage }) {
-      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
       res.status(500).json(message);
     }
   } else {
@@ -177,8 +187,8 @@ router.delete("/:id", async (req, res) => {
     const getDocument = await Document.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getDocument.length > 0) {
       const deleteDocument = await Document.findByIdAndUpdate(req.params.id, {

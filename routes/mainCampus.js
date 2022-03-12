@@ -8,16 +8,18 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All MainCampus
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllMainCampus = await MainCampus.find(condition);
     res.json(getAllMainCampus);
-   } catch ({ message: errMessage }) {
+  } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
     res.status(500).json(message);
   }
@@ -31,17 +33,17 @@ router.get("/:id", async (req, res) => {
     const getMainCampus = await MainCampus.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getMainCampus,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -58,8 +60,18 @@ router.post("/", async (req, res) => {
   const currencySymbol = req.body.currencySymbol;
   const city = req.body.city;
   const state = req.body.state;
-  const address = req.body.address
-  if (!isNil(campusName) && !isNil(schoolName) && !isNil(email) && !isNil(mobileNumber) && !isNil(currency) && !isNil(currencySymbol) && !isNil(city) && !isNil(state) && !isNil(address)) {
+  const address = req.body.address;
+  if (
+    !isNil(campusName) &&
+    !isNil(schoolName) &&
+    !isNil(email) &&
+    !isNil(mobileNumber) &&
+    !isNil(currency) &&
+    !isNil(currencySymbol) &&
+    !isNil(city) &&
+    !isNil(state) &&
+    !isNil(address)
+  ) {
     const newMainCampus = new MainCampus({
       campusName,
       schoolName,
@@ -69,14 +81,14 @@ router.post("/", async (req, res) => {
       currencySymbol,
       city,
       state,
-      address
+      address,
     });
     try {
       const getMainCampus = await MainCampus.find({
         campusName,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getMainCampus.length === 0) {
         const createMainCampus = await newMainCampus.save();
@@ -97,60 +109,73 @@ router.post("/", async (req, res) => {
 // @desc    Update A MainCampus
 // @access  Private
 router.put("/:id", async (req, res) => {
-    const campusName = req.body.campusName;
-    const schoolName = req.body.schoolName;
-    const email = req.body.email;
-    const mobileNumber = req.body.mobileNumber;
-    const currency = req.body.currency;
-    const currencySymbol = req.body.currencySymbol;
-    const city = req.body.city;
-    const state = req.body.state;
-    const address = req.body.address
-  if (!isNil(campusName) && !isNil(schoolName) && !isNil(email) && !isNil(mobileNumber) && !isNil(currency) && !isNil(currencySymbol) && !isNil(city) && !isNil(state) && !isNil(address)) {
+  const campusName = req.body.campusName;
+  const schoolName = req.body.schoolName;
+  const email = req.body.email;
+  const mobileNumber = req.body.mobileNumber;
+  const currency = req.body.currency;
+  const currencySymbol = req.body.currencySymbol;
+  const city = req.body.city;
+  const state = req.body.state;
+  const address = req.body.address;
+  if (
+    !isNil(campusName) &&
+    !isNil(schoolName) &&
+    !isNil(email) &&
+    !isNil(mobileNumber) &&
+    !isNil(currency) &&
+    !isNil(currencySymbol) &&
+    !isNil(city) &&
+    !isNil(state) &&
+    !isNil(address)
+  ) {
     try {
       const getMainCampus = await MainCampus.find({
         campusName,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getMainCampus.length === 0) {
-        const updateMainCampus = await MainCampus.findByIdAndUpdate(req.params.id, {
-          $set: {
-            campusName,
-            schoolName,
-            email,
-            mobileNumber,
-            currency,
-            currencySymbol,
-            city,
-            state,
-            address,
-            createdAt,
-            updatedAt: Date.now,
-            deletedAt
-          },
-        });
+        const updateMainCampus = await MainCampus.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: {
+              campusName,
+              schoolName,
+              email,
+              mobileNumber,
+              currency,
+              currencySymbol,
+              city,
+              state,
+              address,
+              createdAt,
+              updatedAt: Date.now,
+              deletedAt,
+            },
+          }
+        );
         res.json({
           dbRes: updateMainCampus,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "Campus name must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -162,13 +187,16 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateMainCampus = await MainCampus.findByIdAndUpdate(req.params.id, {
+      const updateMainCampus = await MainCampus.findByIdAndUpdate(
+        req.params.id,
+        {
           $set: condition,
           updatedAt: Date.now(),
-        });
-        res.json(updateMainCampus);
+        }
+      );
+      res.json(updateMainCampus);
     } catch ({ message: errMessage }) {
-      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
       res.status(500).json(message);
     }
   } else {
@@ -184,15 +212,18 @@ router.delete("/:id", async (req, res) => {
     const getMainCampus = await MainCampus.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getMainCampus.length > 0) {
-      const deleteMainCampus = await MainCampus.findByIdAndUpdate(req.params.id, {
-        $set: {
-          deletedAt: Date.now(),
-        },
-      });
+      const deleteMainCampus = await MainCampus.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            deletedAt: Date.now(),
+          },
+        }
+      );
       res.json(deleteMainCampus);
     } else {
       res.status(500).json("Main Campus is already deleted");

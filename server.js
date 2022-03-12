@@ -25,6 +25,7 @@ const SubjectsRoute = require("./routes/subjects");
 const CurriculumRoute = require("./routes/curriculum");
 const CurriculumSemestersRoute = require("./routes/curriculumSemesters");
 const CurriculumStudentTypesRoute = require("./routes/curriculumStudentTypes");
+const SubjectsPrerequisite = require("./routes/subjectsPrerequisite");
 require("./services/passport");
 const { graphqlHTTP } = require("express-graphql");
 const app = express();
@@ -76,6 +77,7 @@ app.use("/api/subjects", SubjectsRoute);
 app.use("/api/curriculum", CurriculumRoute);
 app.use("/api/curriculumSemesters", CurriculumSemestersRoute);
 app.use("/api/curriculumStudentTypes", CurriculumStudentTypesRoute);
+app.use("/api/subjectPrerequisite", SubjectsPrerequisite);
 // GRAPHQL
 app.use("/lspu", (req, res) => {
   graphqlHTTP({

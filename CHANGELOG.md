@@ -2,6 +2,12 @@
 
 ## 0.0.10
 
+- Added subjectPrerequisite model
+- Added subjectsPrerequisite routes
+- Added rest api endpoint at server.js
+
+## 0.0.9
+
 - Added curriculumStudentType model
 - Added curriculumStudentTypes routes
 - Added rest api endpoint at server.js
