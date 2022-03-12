@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.14
+
+- Added Curriculum Student Levels model
+- Added Curriculum Student Levels routes
+- Added Curriculum Student Levels at server.
+
 ## 0.0.12
 
 - Added student type model
