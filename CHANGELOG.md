@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.10
+
+- Added curriculumStudentType model
+- Added curriculumStudentTypes routes
+- Added rest api endpoint at server.js
+
 ## 0.0.8
 
 - Added curriculumSemesters model
