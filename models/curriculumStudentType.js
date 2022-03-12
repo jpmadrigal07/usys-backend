@@ -18,4 +18,4 @@ const curriculumStudentType = new Schema({
   deletedAt: Date,
 });
 
-module.exports = mongoose.model("SubjectPrerequisite", curriculumStudentType);
+module.exports = mongoose.model("CurriculumStudentType", curriculumStudentType);
