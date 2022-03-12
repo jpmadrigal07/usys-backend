@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.13
+- removing graphql in the backend
+
 ## 0.0.12
 
 - Added student type model
