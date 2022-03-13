@@ -28,6 +28,7 @@ const CurriculumSemestersRoute = require("./routes/curriculumSemesters");
 const CurriculumStudentTypesRoute = require("./routes/curriculumStudentTypes");
 const SubjectsPrerequisite = require("./routes/subjectsPrerequisite");
 const CurriculumStudentLevelsRoute = require("./routes/curriculumStudentLevels");
+const CurriculumSemesterSubjectsRoutes = require("./routes/curriculumSemesterSubjects");
 require("./services/passport");
 const app = express();
 
@@ -80,6 +81,7 @@ app.use("/api/curriculumSemesters", CurriculumSemestersRoute);
 app.use("/api/curriculumStudentTypes", CurriculumStudentTypesRoute);
 app.use("/api/subjectPrerequisite", SubjectsPrerequisite);
 app.use("/api/curriculumStudentLevels", CurriculumStudentLevelsRoute);
+app.use("/api/curriculumSemesterSubjects", CurriculumSemesterSubjectsRoutes);
 
 const port = process.env.PORT || 5000;
 
