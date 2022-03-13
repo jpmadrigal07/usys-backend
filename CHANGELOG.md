@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.15
+
+- Added curriculum Semester Subjects model
+- Added curriculum Semester Subjects routes
+- Added curriculumS emester Subjects at server.
+
 ## 0.0.14
 
 - Added Curriculum Student Levels model
