@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.13
+## 0.0.16
 
 - Fixed the error handling in privilege.js
 - Fixed the error handling in satelliteCampus.js
@@ -11,6 +11,22 @@
 - Fixed the error handling in userDocument.js
 - Fixed the error handling in userLevel.js
 - Fixed the error handling in userPrivileges.js
+
+## 0.0.15
+
+- Added curriculum Semester Subjects model
+- Added curriculum Semester Subjects routes
+- Added curriculumS emester Subjects at server.
+
+## 0.0.14
+
+- Added Curriculum Student Levels model
+- Added Curriculum Student Levels routes
+- Added Curriculum Student Levels at server.
+
+## 0.0.13
+
+- removing graphql in the backend
 
 ## 0.0.12
 
