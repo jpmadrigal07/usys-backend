@@ -8,23 +8,20 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All User
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllUser = await User.find(condition);
-    res.json({
-      dbRes: getAllUser,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllUser);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -36,17 +33,17 @@ router.get("/:id", async (req, res) => {
     const getUser = await User.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getUser,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -62,38 +59,27 @@ router.post("/", async (req, res) => {
     const newUser = new User({
       email,
       password,
-      userType
+      userType,
     });
     try {
       const getUser = await User.find({
         email,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUser.length === 0) {
         const createUser = await newUser.save();
-        res.json({
-          dbRes: createUser,
-          isSuccess: true
-        });
+        res.json(createUser);
       } else {
-        res.json({
-          dbRes: "Email must be unique",
-          isSuccess: false
-        });
+        res.status(500).json("User is already in use");
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -101,16 +87,16 @@ router.post("/", async (req, res) => {
 // @desc    Update A User
 // @access  Private
 router.put("/:id", async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    const userType = req.body.userType;
+  const email = req.body.email;
+  const password = req.body.password;
+  const userType = req.body.userType;
   if (!isNil(email) && !isNil(password) && !isNil(userType)) {
     try {
       const getUser = await User.find({
         email,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUser.length === 0) {
         const updateUser = await User.findByIdAndUpdate(req.params.id, {
@@ -118,29 +104,29 @@ router.put("/:id", async (req, res) => {
             email,
             password,
             userType,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
         });
         res.json({
           dbRes: updateUser,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "Email must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -152,25 +138,17 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateUser = await User.findByIdAndUpdate(req.params.id, {
-          $set: condition,
-          updatedAt: Date.now(),
-        });
-        res.json({
-          dbRes: updateUser,
-          isSuccess: true
-        });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
+      const updateUser = await User.findByIdAndUpdate(req.params.id, {
+        $set: condition,
+        updatedAt: Date.now(),
       });
+      res.json(updateUser);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "User cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("User Cannot be found");
   }
 });
 
@@ -182,8 +160,8 @@ router.delete("/:id", async (req, res) => {
     const getUser = await User.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getUser.length > 0) {
       const deleteUser = await User.findByIdAndUpdate(req.params.id, {
@@ -191,21 +169,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteUser,
-        isSuccess: true
-      });
+      res.json(deleteUser);
     } else {
-      res.json({
-        dbRes: "Student is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("User is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

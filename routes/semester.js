@@ -18,15 +18,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllSemester = await Semester.find(condition);
-    res.json({
-      dbRes: getAllSemester,
-      isSuccess: true,
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false,
-    });
+    res.json(getAllSemester);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -77,23 +72,16 @@ router.post("/", async (req, res) => {
           dbRes: createSemester,
           isSuccess: true,
         });
+        res.json(createSemester);
       } else {
-        res.json({
-          dbRes: "Semester is already in use",
-          isSuccess: false,
-        });
+        res.status(500).json("Semester is already in use");
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false,
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -117,7 +105,7 @@ router.put("/:id", async (req, res) => {
           $set: {
             name,
             isActive,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
         });
         res.json({
@@ -155,21 +143,13 @@ router.patch("/:id", async (req, res) => {
         $set: condition,
         updatedAt: Date.now(),
       });
-      res.json({
-        dbRes: updateSemester,
-        isSuccess: true,
-      });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+      res.json(updateSemester);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Semester Cannot be found",
-      isSuccess: false,
-    });
+    res.status(500).json("Semester Cannot be found");
   }
 });
 
@@ -190,21 +170,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteSemester,
-        isSuccess: true,
-      });
+      res.json(deleteSemester);
     } else {
-      res.json({
-        dbRes: "Semester is already deleted",
-        isSuccess: false,
-      });
+      res.status(500).json("Semester is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false,
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

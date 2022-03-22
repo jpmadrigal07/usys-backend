@@ -8,23 +8,20 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All UserPrivileges
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
     condition.deletedAt = {
-      $exists: false
-    }
+      $exists: false,
+    };
   }
   try {
     const getAllUserPrivileges = await UserPrivileges.find(condition);
-    res.json({
-      dbRes: getAllUserPrivileges,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllUserPrivileges);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -36,17 +33,17 @@ router.get("/:id", async (req, res) => {
     const getUserPrivileges = await UserPrivileges.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getUserPrivileges,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -61,7 +58,7 @@ router.post("/", async (req, res) => {
   const userPrivileges = {
     userId,
     privilege,
-    isDefault
+    isDefault,
   };
   if (!isNil(userId) && !isNil(privilege)) {
     try {
@@ -70,35 +67,23 @@ router.post("/", async (req, res) => {
         privilege,
         isDefault,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUserPrivileges.length == 0) {
         const newUserPrivileges = new UserPrivileges(userPrivileges);
         const createUserPrivileges = await newUserPrivileges.save();
-        res.json({
-          dbRes: createUserPrivileges,
-          isSuccess: true
-        });
+        res.json(createUserPrivileges);
       } else {
-        res.json({
-          dbRes: "User and privilege id must be unique",
-          isSuccess: false//
-        });
+        res.status(500).json("User and privilege must be unique");
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
-
 });
 
 // @route   PUT api/UserPrivileges/:id
@@ -111,7 +96,7 @@ router.put("/:id", async (req, res) => {
   const userPrivileges = {
     userId,
     privilege,
-    isDefault
+    isDefault,
   };
   if (!isNil(userId) && !isNil(privilege)) {
     try {
@@ -120,38 +105,41 @@ router.put("/:id", async (req, res) => {
         privilege,
         isDefault,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUserPrivileges.length === 0) {
-        const updateUserPrivileges = await UserPrivileges.findByIdAndUpdate(req.params.id, {
-          $set: {
-            userId,
-            privilege,
-            isDefault,
-            updatedAt: Date.now(),
-          },
-        });
+        const updateUserPrivileges = await UserPrivileges.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: {
+              userId,
+              privilege,
+              isDefault,
+              updatedAt: Date.now(),
+            },
+          }
+        );
         res.json({
           dbRes: updateUserPrivileges,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "User and privilege id must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -163,25 +151,24 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateUserPrivileges = await UserPrivileges.findByIdAndUpdate(req.params.id, {
+      const updateUserPrivileges = await UserPrivileges.findByIdAndUpdate(
+        req.params.id,
+        {
           $set: condition,
           updatedAt: Date.now(),
-        });
-        res.json({
-          dbRes: updateUserPrivileges,
-          isSuccess: true
-        });
-    } catch (error) {
+        }
+      );
       res.json({
-        dbRes: error.message,
-        isSuccess: false
+        dbRes: updateUserPrivileges,
+        isSuccess: true,
       });
+      res.json(updateUserPrivileges);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "User Privileges cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("User Privilege Cannot be found");
   }
 });
 
@@ -193,30 +180,29 @@ router.delete("/:id", async (req, res) => {
     const getUserPrivileges = await UserPrivileges.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getUserPrivileges.length > 0) {
-      const deleteUserPrivileges = await UserPrivileges.findByIdAndUpdate(req.params.id, {
-        $set: {
-          deletedAt: Date.now(),
-        },
-      });
+      const deleteUserPrivileges = await UserPrivileges.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            deletedAt: Date.now(),
+          },
+        }
+      );
       res.json({
         dbRes: deleteUserPrivileges,
-        isSuccess: true
+        isSuccess: true,
       });
+      res.json(deleteUserPrivileges);
     } else {
-      res.json({
-        dbRes: "User Privilege is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("User Privilege is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

@@ -18,15 +18,10 @@ router.get("/", async (req, res) => {
   }
   try {
     const getAllStudentType = await StudentType.find(condition);
-    res.json({
-      dbRes: getAllStudentType,
-      isSuccess: true,
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false,
-    });
+    res.json(getAllStudentType);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -48,27 +43,16 @@ router.post("/", async (req, res) => {
       });
       if (getStudentType.length === 0) {
         const createStudentType = await newStudentType.save();
-        res.json({
-          dbRes: createStudentType,
-          isSuccess: true,
-        });
+        res.json(createStudentType);
       } else {
-        res.json({
-          dbRes: "Student Type is already in use",
-          isSuccess: false,
-        });
+        res.status(500).json("Student is already in use");
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false,
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -86,21 +70,13 @@ router.patch("/:id", async (req, res) => {
           updatedAt: Date.now(),
         }
       );
-      res.json({
-        dbRes: updateStudentType,
-        isSuccess: true,
-      });
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false,
-      });
+      res.json(updateStudentType);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Student Type Cannot be found",
-      isSuccess: false,
-    });
+    res.status(500).json("Student Cannot be found");
   }
 });
 
@@ -124,21 +100,13 @@ router.delete("/:id", async (req, res) => {
           },
         }
       );
-      res.json({
-        dbRes: deleteStudentType,
-        isSuccess: true,
-      });
+      res.json(deleteStudentType);
     } else {
-      res.json({
-        dbRes: "Student Type is already deleted",
-        isSuccess: false,
-      });
+      res.status(500).json("Student is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false,
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

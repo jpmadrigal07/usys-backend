@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.0.13
+
+- Fixed the error handling in privilege.js
+- Fixed the error handling in satelliteCampus.js
+- Fixed the error handling in semester.js
+- Fixed the error handling in student.js
+- Fixed the error handling in studentLevel.js
+- Fixed the error handling in user.js
+- Fixed the error handling in userDocument.js
+- Fixed the error handling in userLevel.js
+- Fixed the error handling in userPrivileges.js
+
 ## 0.0.12
 
 - Added student type model
