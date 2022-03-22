@@ -4,30 +4,27 @@ const UserDocument = require("../models/userDocument");
 const isNil = require("lodash/isNil");
 const isEmpty = require("lodash/isEmpty");
 const multer = require("multer");
-const path = require('path');
+const path = require("path");
 const helpers = require("./helpers");
 
 // @route   GET api/user
 // @desc    Get All UserDocument
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllUserDocument = await UserDocument.find(condition);
-    res.json({
-      dbRes: getAllUserDocument,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllUserDocument);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -39,17 +36,17 @@ router.get("/:id", async (req, res) => {
     const getUserDocument = await UserDocument.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getUserDocument,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -64,73 +61,66 @@ const storage = multer.diskStorage({
 
   // By default, multer removes file extensions so let's add them back
   filename: function (req, file, cb) {
-    cb(
-      null,
-      Date.now() + path.extname(file.originalname)
-    );
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
-const upload = multer({ storage, fileFilter: helpers.imageFilter })
+const upload = multer({ storage, fileFilter: helpers.imageFilter });
 
 router.post("/", upload.single("requiredFile"), async (req, res) => {
-  const documentId = req.body.documentId
-  const userId = req.body.userId
-  const documentPath = `uploads/${req.file.filename}`
+  const documentId = req.body.documentId;
+  const userId = req.body.userId;
+  const documentPath = `uploads/${req.file.filename}`;
   if (req.file && userId && documentId) {
     try {
       const getUserDocument = await UserDocument.find({
         documentId,
         userId,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUserDocument.length === 0) {
         const newUserDocument = new UserDocument({
           documentId,
           documentPath,
-          userId
-        })
+          userId,
+        });
         const createUserDocument = await newUserDocument.save();
-        if(createUserDocument) {
+        if (createUserDocument) {
           res.json({
-            dbRes: { message: "Document uploaded", type: "add", document: createUserDocument },
-            isSuccess: true
+            dbRes: { document: createUserDocument },
+            isSuccess: true,
           });
         } else {
-          res.json({
-            dbRes: { message: "Document upload failed", type: "add", document: {} },
-            isSuccess: true
-          });
+          res.status(500).json("Document upload failed");
         }
       } else {
-        const updateUserDocument = await UserDocument.findOneAndUpdate({documentId, userId}, {
-          $set: {
-            documentPath,
-            updatedAt: Date.now(),
+        const updateUserDocument = await UserDocument.findOneAndUpdate(
+          { documentId, userId },
+          {
+            $set: {
+              documentPath,
+              updatedAt: Date.now(),
+            },
           },
-        }, {returnOriginal: false});
-        if(updateUserDocument) {
+          { returnOriginal: false }
+        );
+        if (updateUserDocument) {
           res.json({
-            dbRes: { message: "Document updated", type: "update", document: updateUserDocument },
-            isSuccess: true
+            dbRes: { document: updateUserDocument },
+            isSuccess: true,
           });
         } else {
-          res.json({
-            dbRes: { message: "Document update failed", type: "update", document: {} },
-            isSuccess: true
-          });
+          res.status(500).json("Required values are either invalid or empty");
         }
       }
-    } catch (error) {
-      res.json({
-        dbRes: error.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    return res.send("Please select an image to upload")
+    return res.send("Please select an image to upload");
   }
 });
 
@@ -148,38 +138,41 @@ router.put("/:id", async (req, res) => {
         filePath,
         userId,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUserDocument.length === 0) {
-        const updateUserDocument = await UserDocument.findByIdAndUpdate(req.params.id, {
-          $set: {
-            documentId,
-            filePath,
-            userId,
-            updatedAt: Date.now(),
-          },
-        });
+        const updateUserDocument = await UserDocument.findByIdAndUpdate(
+          req.params.id,
+          {
+            $set: {
+              documentId,
+              filePath,
+              userId,
+              updatedAt: Date.now(),
+            },
+          }
+        );
         res.json({
           dbRes: updateUserDocument,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "Document id must be unique",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -191,25 +184,24 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateUserDocument = await UserDocument.findByIdAndUpdate(req.params.id, {
+      const updateUserDocument = await UserDocument.findByIdAndUpdate(
+        req.params.id,
+        {
           $set: condition,
           updatedAt: Date.now(),
-        });
-        res.json({
-          dbRes: updateUserDocument,
-          isSuccess: true
-        });
-    } catch (error) {
+        }
+      );
       res.json({
-        dbRes: error.message,
-        isSuccess: false
+        dbRes: updateUserDocument,
+        isSuccess: true,
       });
+      res.json(updateUserDocument);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "User document cannot be found",
-      isSuccess: false
-    });
+    res.status(500).json("User document Cannot be found");
   }
 });
 
@@ -221,30 +213,29 @@ router.delete("/:id", async (req, res) => {
     const getUserDocument = await UserDocument.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getUserDocument.length > 0) {
-      const deleteUserDocument = await UserDocument.findByIdAndUpdate(req.params.id, {
-        $set: {
-          deletedAt: Date.now(),
-        },
-      });
+      const deleteUserDocument = await UserDocument.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: {
+            deletedAt: Date.now(),
+          },
+        }
+      );
       res.json({
         dbRes: deleteUserDocument,
-        isSuccess: true
+        isSuccess: true,
       });
+      res.json(deleteUserDocument);
     } else {
-      res.json({
-        dbRes: "User document is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("User document is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

@@ -9,23 +9,20 @@ const isEmpty = require("lodash/isEmpty");
 // @desc    Get All Student
 // @access  Public
 router.get("/", async (req, res) => {
-  const condition = !isNil(req.query.condition) ? JSON.parse(req.query.condition) : {};
+  const condition = !isNil(req.query.condition)
+    ? JSON.parse(req.query.condition)
+    : {};
   if (isNil(condition.deletedAt)) {
-      condition.deletedAt = {
-          $exists: false
-      }
+    condition.deletedAt = {
+      $exists: false,
+    };
   }
   try {
     const getAllStudent = await Student.find(condition);
-    res.json({
-      dbRes: getAllStudent,
-      isSuccess: true
-    });
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+    res.json(getAllStudent);
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 
@@ -37,17 +34,17 @@ router.get("/:id", async (req, res) => {
     const getStudent = await Student.findById({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     res.json({
       dbRes: getStudent,
-      isSuccess: true
+      isSuccess: true,
     });
   } catch (error) {
     res.json({
       dbRes: error.message,
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -63,53 +60,52 @@ router.post("/", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const userType = "Student";
-  if (!isNil(campusId) && !isNil(admitType) && !isNil(typeOfStudent) && !isNil(email) && !isNil(password)) {
+  if (
+    !isNil(campusId) &&
+    !isNil(admitType) &&
+    !isNil(typeOfStudent) &&
+    !isNil(email) &&
+    !isNil(password)
+  ) {
     const newUser = new User({
       email,
       password,
-      userType
+      userType,
     });
     try {
       const getUser = await User.find({
         email,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getUser.length === 0) {
         const createUser = await newUser.save();
-        if(createUser) {
+        if (createUser) {
           const newStudent = new Student({
             userId: createUser._id,
             lrn,
             campusId,
             admitType,
-            typeOfStudent
+            typeOfStudent,
           });
           const createStudent = await newStudent.save();
-          const studentAccount = {user: createUser, student: createStudent}
+          const studentAccount = { user: createUser, student: createStudent };
           res.json({
             dbRes: studentAccount,
-            isSuccess: true
+            isSuccess: true,
           });
         }
+        res.json(createStudent);
       } else {
-        res.json({
-          dbRes: "Email is already in use",
-          isSuccess: false
-        });
+        res.status(500).json("Email is already in use");
       }
-    } catch (error) {
-      res.json({
-        dbRes: err.message,
-        isSuccess: false
-      });
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -121,13 +117,18 @@ router.put("/:id", async (req, res) => {
   const campus = req.body.campus;
   const admitType = req.body.admitType;
   const typeOfStudent = req.body.typeOfStudent;
-  if (!isNil(lrn) && !isNil(campus) && !isNil(admitType) && !isNil(typeOfStudent)) {
+  if (
+    !isNil(lrn) &&
+    !isNil(campus) &&
+    !isNil(admitType) &&
+    !isNil(typeOfStudent)
+  ) {
     try {
       const getStudent = await Student.find({
         lrn,
         deletedAt: {
-          $exists: false
-        }
+          $exists: false,
+        },
       });
       if (getStudent.length > 0) {
         const updateStudent = await Student.findByIdAndUpdate(req.params.id, {
@@ -136,29 +137,29 @@ router.put("/:id", async (req, res) => {
             campus,
             admitType,
             typeOfStudent,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
           },
         });
         res.json({
           dbRes: updateStudent,
-          isSuccess: true
+          isSuccess: true,
         });
       } else {
         res.json({
           dbRes: "Student cannot be found",
-          isSuccess: false
+          isSuccess: false,
         });
       }
     } catch (error) {
       res.json({
         dbRes: error.message,
-        isSuccess: false
+        isSuccess: false,
       });
     }
   } else {
     res.json({
       dbRes: "Required values are either invalid or empty",
-      isSuccess: false
+      isSuccess: false,
     });
   }
 });
@@ -170,25 +171,25 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-        const updateStudent = await Student.findByIdAndUpdate(req.params.id, {
+      const updateStudent = await Student.findByIdAndUpdate(
+        req.params.id,
+        {
           $set: condition,
           updatedAt: Date.now(),
-        }, {new: true});
-        res.json({
-          dbRes: updateStudent,
-          isSuccess: true
-        });
-    } catch (error) {
+        },
+        { new: true }
+      );
       res.json({
-        dbRes: error.message,
-        isSuccess: false
+        dbRes: updateStudent,
+        isSuccess: true,
       });
+      res.json(updateStudent);
+    } catch ({ message: errMessage }) {
+      const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+      res.status(500).json(message);
     }
   } else {
-    res.json({
-      dbRes: "Required values are either invalid or empty",
-      isSuccess: false
-    });
+    res.status(500).json("Required values are either invalid or empty");
   }
 });
 
@@ -200,8 +201,8 @@ router.delete("/:id", async (req, res) => {
     const getStudent = await Student.find({
       _id: req.params.id,
       deletedAt: {
-        $exists: false
-      }
+        $exists: false,
+      },
     });
     if (getStudent.length > 0) {
       const deleteStudent = await Student.findByIdAndUpdate(req.params.id, {
@@ -209,21 +210,13 @@ router.delete("/:id", async (req, res) => {
           deletedAt: Date.now(),
         },
       });
-      res.json({
-        dbRes: deleteStudent,
-        isSuccess: true
-      });
+      res.json(deleteStudent);
     } else {
-      res.json({
-        dbRes: "Student is already deleted",
-        isSuccess: false
-      });
+      res.status(500).json("Student is already deleted");
     }
-  } catch (error) {
-    res.json({
-      dbRes: error.message,
-      isSuccess: false
-    });
+  } catch ({ message: errMessage }) {
+    const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
+    res.status(500).json(message);
   }
 });
 

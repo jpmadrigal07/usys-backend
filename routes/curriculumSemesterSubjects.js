@@ -17,7 +17,8 @@ router.get("/", async (req, res) => {
     };
   }
   try {
-    const getAllCurriculumSemesterSubjects = await CurriculumSemesterSubjects.find(condition);
+    const getAllCurriculumSemesterSubjects =
+      await CurriculumSemesterSubjects.find(condition);
     res.json(getAllCurriculumSemesterSubjects);
   } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
@@ -37,16 +38,20 @@ router.post("/", async (req, res) => {
   };
   if (!isNil(curriculumId) && !isNil(semesterId)) {
     try {
-      const getCurriculumSemesterSubjects = await CurriculumSemesterSubjects.find({
-        curriculumId,
-        semesterId,
-        deletedAt: {
-          $exists: false,
-        },
-      });
+      const getCurriculumSemesterSubjects =
+        await CurriculumSemesterSubjects.find({
+          curriculumId,
+          semesterId,
+          deletedAt: {
+            $exists: false,
+          },
+        });
       if (getCurriculumSemesterSubjects.length == 0) {
-        const newCurriculumSemesterSubjects = new CurriculumSemesterSubjects(curriculumSemesterSubjects);
-        const createCurriculumSemesterSubjects = await newCurriculumSemesterSubjects.save();
+        const newCurriculumSemesterSubjects = new CurriculumSemesterSubjects(
+          curriculumSemesterSubjects
+        );
+        const createCurriculumSemesterSubjects =
+          await newCurriculumSemesterSubjects.save();
         res.json(createCurriculumSemesterSubjects);
       } else {
         res.status(500).json("Curriculum Semester Subjects is already in use");
@@ -67,13 +72,11 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-      const updateCurriculumSemesterSubjects = await CurriculumSemesterSubjects.findByIdAndUpdate(
-        req.params.id,
-        {
+      const updateCurriculumSemesterSubjects =
+        await CurriculumSemesterSubjects.findByIdAndUpdate(req.params.id, {
           $set: condition,
           updatedAt: Date.now(),
-        }
-      );
+        });
       res.json(updateCurriculumSemesterSubjects);
     } catch ({ message: errMessage }) {
       const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
@@ -89,21 +92,21 @@ router.patch("/:id", async (req, res) => {
 // @access  Private
 router.delete("/:id", async (req, res) => {
   try {
-    const getCurriculumSemesterSubjects = await CurriculumSemesterSubjects.find({
-      _id: req.params.id,
-      deletedAt: {
-        $exists: false,
-      },
-    });
+    const getCurriculumSemesterSubjects = await CurriculumSemesterSubjects.find(
+      {
+        _id: req.params.id,
+        deletedAt: {
+          $exists: false,
+        },
+      }
+    );
     if (getCurriculumSemesterSubjects.length > 0) {
-      const deleteCurriculumSemesterSubjects = await CurriculumSemesterSubjects.findByIdAndUpdate(
-        req.params.id,
-        {
+      const deleteCurriculumSemesterSubjects =
+        await CurriculumSemesterSubjects.findByIdAndUpdate(req.params.id, {
           $set: {
             deletedAt: Date.now(),
           },
-        }
-      );
+        });
       res.json(deleteCurriculumSemesterSubjects);
     } else {
       res.status(500).json("Curriculum Semester Subjects is already deleted");

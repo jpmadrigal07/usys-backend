@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const curriculumSemesterSubjects = new Schema({
-curriculumId: {
+  curriculumId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Curriculum",
   },
-semesterId: {
+  semesterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Semester",
   },
@@ -18,4 +18,7 @@ semesterId: {
   deletedAt: Date,
 });
 
-module.exports = mongoose.model("CurriculumSemesterSubjects", curriculumSemesterSubjects);
+module.exports = mongoose.model(
+  "CurriculumSemesterSubjects",
+  curriculumSemesterSubjects
+);

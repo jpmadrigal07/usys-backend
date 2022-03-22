@@ -17,7 +17,9 @@ router.get("/", async (req, res) => {
     };
   }
   try {
-    const getAllCurriculumStudentLevels = await CurriculumStudentLevels.find(condition);
+    const getAllCurriculumStudentLevels = await CurriculumStudentLevels.find(
+      condition
+    );
     res.json(getAllCurriculumStudentLevels);
   } catch ({ message: errMessage }) {
     const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
@@ -45,8 +47,11 @@ router.post("/", async (req, res) => {
         },
       });
       if (getCurriculumStudentLevels.length == 0) {
-        const newCurriculumStudentLevels = new CurriculumStudentLevels(curriculumStudentLevels);
-        const createCurriculumStudentLevels = await newCurriculumStudentLevels.save();
+        const newCurriculumStudentLevels = new CurriculumStudentLevels(
+          curriculumStudentLevels
+        );
+        const createCurriculumStudentLevels =
+          await newCurriculumStudentLevels.save();
         res.json(createCurriculumStudentLevels);
       } else {
         res.status(500).json("Curriculum Student Levels is already in use");
@@ -67,13 +72,11 @@ router.patch("/:id", async (req, res) => {
   const condition = req.body;
   if (!isEmpty(condition)) {
     try {
-      const updateCurriculumStudentLevels = await CurriculumStudentLevels.findByIdAndUpdate(
-        req.params.id,
-        {
+      const updateCurriculumStudentLevels =
+        await CurriculumStudentLevels.findByIdAndUpdate(req.params.id, {
           $set: condition,
           updatedAt: Date.now(),
-        }
-      );
+        });
       res.json(updateCurriculumStudentLevels);
     } catch ({ message: errMessage }) {
       const message = errMessage ? errMessage : UNKNOWN_ERROR_OCCURED;
@@ -96,14 +99,12 @@ router.delete("/:id", async (req, res) => {
       },
     });
     if (getCurriculumStudentLevels.length > 0) {
-      const deleteCurriculumStudentLevels = await CurriculumStudentLevels.findByIdAndUpdate(
-        req.params.id,
-        {
+      const deleteCurriculumStudentLevels =
+        await CurriculumStudentLevels.findByIdAndUpdate(req.params.id, {
           $set: {
             deletedAt: Date.now(),
           },
-        }
-      );
+        });
       res.json(deleteCurriculumStudentLevels);
     } else {
       res.status(500).json("Curriculum Student Levels is already deleted");
