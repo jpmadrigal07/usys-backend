@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const userLevel = new Schema({
-    level: Number,
+const userType = new Schema({
+    type: String,
     privileges: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Privilege"
@@ -15,4 +15,4 @@ const userLevel = new Schema({
     deletedAt: Date
 });
 
-module.exports = mongoose.model('UserLevel', userLevel);
+module.exports = mongoose.model('UserType', userType);

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.17
+-change userLevel to userType models, routes, and server
+
 ## 0.0.16
 
 - Fixed the error handling in privilege.js
